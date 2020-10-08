@@ -48,6 +48,7 @@ define([
         $hist.addClass('cp-smallpatch');
         $hist.addClass('cp-history-oo');
         var $bottom = $toolbar.find('.cp-toolbar-bottom');
+        var Messages = common.Messages;
 
         var getVersion = function () {
             var major = sortedCp.length - cpIndex;
@@ -136,8 +137,6 @@ define([
         };
 
         config.setHistory(true);
-
-        var Messages = common.Messages;
 
         $hist.html('').css('display', 'flex');
         $bottom.hide();
@@ -340,6 +339,7 @@ define([
                         if (!val) { return true; }
                         config.makeSnapshot(val, function (err) {
                             if (err) { return; }
+                            $input.val('');
                             UI.log(Messages.saved);
                         }, {
                             hash: getVersion(),

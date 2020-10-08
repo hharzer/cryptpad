@@ -392,7 +392,7 @@ define([
         };
         */
 
-        var makeSnapshot = function (title) {
+        var makeSnapshot = function (title, $input) {
             var idx = getIndex(c);
             if (!config.getLastMetadata || !config.setLastMetadata) { return; }
             try {
@@ -407,6 +407,7 @@ define([
                 };
                 var sent = config.setLastMetadata(md);
                 if (!sent) { return void UI.alert(Messages.snapshots_cantMake); }
+                $input.val('');
                 refreshBar();
             } catch (e) {
                 console.error(e);
@@ -621,7 +622,7 @@ define([
                     onClick: function () {
                         var val = $input.val();
                         if (!val) { return true; }
-                        makeSnapshot(val);
+                        makeSnapshot(val, $input);
                     },
                     keys: [],
                 }];
