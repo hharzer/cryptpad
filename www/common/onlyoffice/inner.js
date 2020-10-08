@@ -8,6 +8,7 @@ define([
     '/common/common-hash.js',
     '/common/common-util.js',
     '/common/common-ui-elements.js',
+    '/common/common-feedback.js',
     '/common/hyperscript.js',
     '/api/config',
     '/customize/messages.js',
@@ -35,6 +36,7 @@ define([
     Hash,
     Util,
     UIElements,
+    Feedback,
     h,
     ApiConfig,
     Messages,
@@ -331,12 +333,6 @@ define([
             // Get the last cp idx
             var all = sortCpIndex(content.hashes || {});
             var current = all[all.length - 1] || 0;
-
-            // XXX Keep all cp now
-            // Get the expected cp idx
-            //var _i = Math.floor(ev.index / CHECKPOINT_INTERVAL);
-            // Take the max of both
-            //var i = Math.max(_i, current);
 
             var i = current + 1;
             content.hashes[i] = {
@@ -1026,10 +1022,6 @@ define([
                 return;
             }
 
-            // XXX
-            // If save lock, tell onlyoffice that it can't save now...
-            // if (content && content.saveLock] {}
-
             // Send the changes
             content.locks = content.locks || {};
             rtChannel.sendMsg({
@@ -1042,11 +1034,6 @@ define([
                 if (err) {
                     return void console.error(err);
                 }
-                // XXX
-                // If save lock, it means the sheet was locked for a checkpoint before
-                // our message was received!
-                // Add our message to our own queue to load it after the checkpoint reload
-
 
                 if (pendingChanges[uid]) {
                     clearTimeout(pendingChanges[uid]);
@@ -1959,7 +1946,7 @@ define([
                 }).click(function () {
                     ooChannel.historyLastHash = ooChannel.lastHash;
                     ooChannel.currentIndex = ooChannel.cpIndex;
-                    //Feedback.send('OO_HISTORY'); // XXX pull Feedback from require
+                    Feedback.send('OO_HISTORY');
                     var histConfig = {
                         onPatch: onPatch,
                         onCheckpoint: onCheckpoint,
@@ -2162,7 +2149,7 @@ define([
             loadLastDocument(lastCp, function (err) {
                 console.error(err);
                 // On error, do nothing
-                // XXX lock the document or ask for a page reload?
+                // FIXME lock the document or ask for a page reload?
             }, function (blob, type) {
                 resetData(blob, type);
             });
